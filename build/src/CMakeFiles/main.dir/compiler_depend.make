@@ -304,7 +304,8 @@ src/CMakeFiles/main.dir/main.cpp.o: ../src/main.cpp \
   /usr/include/SFML/Graphics/Sprite.hpp \
   /usr/include/SFML/Graphics/Text.hpp \
   /usr/include/SFML/Graphics/VertexBuffer.hpp \
-  ../include/settings.hpp
+  ../include/settings.hpp \
+  ../include/body.hpp
 
 
 ../include/settings.hpp:
@@ -428,6 +429,8 @@ src/CMakeFiles/main.dir/main.cpp.o: ../src/main.cpp \
 /usr/include/locale.h:
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
+
+../include/body.hpp:
 
 /usr/include/c++/11/bits/localefwd.h:
 

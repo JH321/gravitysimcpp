@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <settings.hpp>
+#include <body.hpp>
 
 int main(int argc, char const *argv[])
 {
