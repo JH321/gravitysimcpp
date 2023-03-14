@@ -1,8 +1,9 @@
 #include <SFML/Graphics.hpp>
+#include <settings.hpp>
 
 int main(int argc, char const *argv[])
 {
-    sf::RenderWindow window(sf::VideoMode(200,200), "Hello From SFML");
+    sf::RenderWindow window(sf::VideoMode(settings::DIMENSIONS.first, settings::DIMENSIONS.second), "Hello From SFML");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Magenta);
 
