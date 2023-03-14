@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/jh432/gravitysim/gravitysim/build/src",
+  "command": "/usr/bin/g++  -I/home/jh432/gravitysim/gravitysim/include -O3 -DNDEBUG -o CMakeFiles/main.dir/main.cpp.o -c /home/jh432/gravitysim/gravitysim/src/main.cpp",
+  "file": "/home/jh432/gravitysim/gravitysim/src/main.cpp"
+}
+]
