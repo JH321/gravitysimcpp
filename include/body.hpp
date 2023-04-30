@@ -7,8 +7,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-namespace planets
-{
   /**
    * @brief  The Body object represents a body that is influenced by gravitational forces.
    *         This class handles all the calculations necessary to simulate gravitational attraction
@@ -17,8 +15,70 @@ namespace planets
    */
   class body
   {
-    
     private:
+
+    double mass{};
+    int radius{};
+    bool inplace{};
+    sf::Vector2<double> position{};
+    sf::Vector2<double> velocity{};
+    sf::Vector2<double> acceleration{};
+
+
+    public:
+
+      /**
+       * @brief Construct a new body object.
+       *
+       * @param _mass Mass of the body.
+       * @param _radius Radius of the body.
+       * @param _inplace Whether the body can move.
+       * @param _position The starting position of the body.
+       * @param _velocity The initial velocity of the body
+       */
+      body(double _mass, int _radius, bool _inplace, sf::Vector2<double> _position, sf::Vector2<double> _velocity)
+      : mass{_mass}, radius{_radius}, inplace{_inplace}, position{_position}, velocity{_velocity}, acceleration{0, 0}
+      {}
+
+      /**
+       * @brief Gets the radius (pixels) of the body.
+       * @return int The radius (pixel count) of the body.
+      */
+      int get_radius()
+      {
+        return radius;
+      }
+
+      /**
+       * @brief Gets the position of the body.
+       * @return double The 2D coordinates of the body.
+      */
+      sf::Vector2<double> get_position()
+      {
+        return position;
+      }
+
+
+      /**
+       * @brief Function to call to initiate updating of position given 
+       *        a vector of other bodies exerting a force on this body and
+       *        a small time segment.
+       * 
+       * @param bodies Vector containing other bodies exerting a force on this body.
+       * @param dt Time segment (time since last frame update) in seconds.
+      */
+      void update_position(const std::vector<body*>& bodies, double dt)
+      {
+        if(!inplace)
+        {
+          increment_position(dt);
+          update_velocity(bodies, dt);
+        }
+
+
+      }
+
+     private:
 
        /**
        * @brief Increments the position of the body given some 
@@ -117,72 +177,5 @@ namespace planets
         return new_acceleration;
       }
 
-
-
-    public:
-
-      /**
-       * @brief Construct a new body object.
-       *
-       * @param _mass Mass of the body.
-       * @param _radius Radius of the body.
-       * @param _inplace Whether the body can move.
-       * @param _position The starting position of the body.
-       * @param _velocity The initial velocity of the body
-       */
-      body(double _mass, int _radius, bool _inplace, sf::Vector2<double> _position, sf::Vector2<double> _velocity)
-      : mass{_mass}, radius{_radius}, inplace{_inplace}, position{_position}, velocity{_velocity}, acceleration{0, 0}
-      {}
-
-      /**
-       * @brief Gets the radius (pixels) of the body.
-       * @return int The radius (pixel count) of the body.
-      */
-      int get_radius()
-      {
-        return radius;
-      }
-
-      /**
-       * @brief Gets the position of the body.
-       * @return double The 2D coordinates of the body.
-      */
-      sf::Vector2<double> get_position()
-      {
-        return position;
-      }
-
-
-      /**
-       * @brief Function to call to initiate updating of position given 
-       *        a vector of other bodies exerting a force on this body and
-       *        a small time segment.
-       * 
-       * @param bodies Vector containing other bodies exerting a force on this body.
-       * @param dt Time segment (time since last frame update) in seconds.
-      */
-      void update_position(const std::vector<body*>& bodies, double dt)
-      {
-        if(!inplace)
-        {
-          increment_position(dt);
-          update_velocity(bodies, dt);
-        }
-
-
-      }
-
-
-      
-    private:
-
-      double mass{};
-      int radius{};
-      bool inplace{};
-      sf::Vector2<double> position{};
-      sf::Vector2<double> velocity{};
-      sf::Vector2<double> acceleration{};
-
-
   };
-}
+
