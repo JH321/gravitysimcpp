@@ -17,12 +17,12 @@
   {
     private:
 
-    double mass{};
-    int radius{};
-    bool inplace{};
-    sf::Vector2<double> position{};
-    sf::Vector2<double> velocity{};
-    sf::Vector2<double> acceleration{};
+      double mass{};
+      int radius{};
+      bool inplace{};
+      sf::Vector2<double> position{};
+      sf::Vector2<double> velocity{};
+      sf::Vector2<double> acceleration{};
 
 
     public:
@@ -47,6 +47,15 @@
       int get_radius()
       {
         return radius;
+      }
+
+      /**
+       * @brief Gets the mass of the body.
+       * @return double The mass of the body.
+      */
+      double get_mass()
+      {
+        return mass;
       }
 
       /**
@@ -130,13 +139,18 @@
       */
       void update_acceleration(const std::vector<body*>& bodies)
       {
+        update_acceleration_brute_force(bodies);
+      }
+
+      void update_acceleration_brute_force(const std::vector<body*>& bodies)
+      {
         sf::Vector2<double> new_acceleration{0, 0};
         for(const body* element : bodies)
         {
 
           if(element != this)
           {
-            sf::Vector2<double> a_vector = calc_accel_bruteforce(element);
+            sf::Vector2<double> a_vector = calc_accel(element);
             new_acceleration = new_acceleration + a_vector;
           }
 
@@ -151,7 +165,7 @@
        * @param bodyptr Pointer to the body object inducing an acceleration on this body.
        * @return sf::Vector2<double> The acceleration vector induced on this body.
       */
-      sf::Vector2<double> calc_accel_bruteforce(const body* bodyptr)
+      sf::Vector2<double> calc_accel(const body* bodyptr)
       {
         double x_dist = bodyptr -> position.x - this -> position.x;
         double y_dist = bodyptr -> position.y - this -> position.y;

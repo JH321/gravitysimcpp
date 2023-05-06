@@ -1,7 +1,11 @@
+#pragma once
+
 #include <settings.hpp>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <utility>
+#include <body.hpp>
+#include <barnes_hut_tree.hpp>
 
 namespace simulation
 {
