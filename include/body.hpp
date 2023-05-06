@@ -6,6 +6,9 @@
 #include <cmath>
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <barnes_hut_tree.hpp>
+
+
 
   /**
    * @brief  The Body object represents a body that is influenced by gravitational forces.
@@ -36,7 +39,7 @@
        * @param _position The starting position of the body.
        * @param _velocity The initial velocity of the body
        */
-      body(double _mass, int _radius, bool _inplace, sf::Vector2<double> _position, sf::Vector2<double> _velocity)
+      body(double _mass, int _radius, bool _inplace, sf::Vector2<double> _position, sf::Vector2<double> _velocity = sf::Vector2<double>(0, 0))
       : mass{_mass}, radius{_radius}, inplace{_inplace}, position{_position}, velocity{_velocity}, acceleration{0, 0}
       {}
 
@@ -87,6 +90,37 @@
 
       }
 
+      /**
+       * @brief Calculates the acceleration induced on this body by another body.
+       * 
+       * @param bodyptr Pointer to the body object inducing an acceleration on this body.
+       * @return sf::Vector2<double> The acceleration vector induced on this body.
+      */
+      sf::Vector2<double> calc_accel(const body* bodyptr)
+      {
+        double x_dist = bodyptr -> position.x - this -> position.x;
+        double y_dist = bodyptr -> position.y - this -> position.y;
+
+        double theta = atan2(y_dist, x_dist);
+
+        double dist_mag = sqrt(pow(x_dist, 2) + pow(y_dist, 2));
+
+        double accel_mult = 1;
+        if(dist_mag <= this -> radius + bodyptr -> radius)
+        {
+
+          dist_mag = this -> radius + bodyptr -> radius;
+          accel_mult = -1;
+        }
+
+        double accel_mag = (settings::G * bodyptr -> mass) / (pow(dist_mag, 2));
+
+        accel_mag *= accel_mult;
+
+        sf::Vector2<double> new_acceleration{accel_mag * cos(theta), accel_mag * sin(theta)};
+
+        return new_acceleration;
+      }
      private:
 
        /**
@@ -159,37 +193,18 @@
         acceleration = new_acceleration;
       }
 
-      /**
-       * @brief Calculates the acceleration induced on this body by another body.
-       * 
-       * @param bodyptr Pointer to the body object inducing an acceleration on this body.
-       * @return sf::Vector2<double> The acceleration vector induced on this body.
-      */
-      sf::Vector2<double> calc_accel(const body* bodyptr)
+      void update_acceleration_b_h(const std::vector<body*>& bodies)
       {
-        double x_dist = bodyptr -> position.x - this -> position.x;
-        double y_dist = bodyptr -> position.y - this -> position.y;
-
-        double theta = atan2(y_dist, x_dist);
-
-        double dist_mag = sqrt(pow(x_dist, 2) + pow(y_dist, 2));
-
-        double accel_mult = 1;
-        if(dist_mag <= this -> radius + bodyptr -> radius)
-        {
-
-          dist_mag = this -> radius + bodyptr -> radius;
-          accel_mult = -1;
-        }
-
-        double accel_mag = (settings::G * bodyptr -> mass) / (pow(dist_mag, 2));
-
-        accel_mag *= accel_mult;
-
-        sf::Vector2<double> new_acceleration{accel_mag * cos(theta), accel_mag * sin(theta)};
-
-        return new_acceleration;
+        
+        sf::Vector2<double> new_acceleration{0, 0};
+        b_h_tree body_tree{bodies};
+        
+        acceleration = new_acceleration;
       }
+
+
+
+      
 
   };
 
