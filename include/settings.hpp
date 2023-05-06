@@ -10,6 +10,8 @@ namespace settings
   constexpr double G{500};
 
   constexpr double RATIO_EPSILON{0.75};
+
+  constexpr bool b_h_sim = false;
 }
 
 

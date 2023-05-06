@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <settings.hpp>
-#include <body.hpp>
 #include <vector>
 #include <iostream>
 #include <n_body_sim.hpp>
