@@ -1,6 +1,6 @@
 #include <barnes_hut_tree.hpp>
 #include <SFML/Graphics.hpp>
-
+#include <iostream>
 //inner node struct definitions
 b_h_tree::b_h_node::b_h_node()
 {
@@ -30,37 +30,44 @@ bool b_h_tree::b_h_node::is_empty()
 
 void b_h_tree::b_h_node::update_total_mass()
 {
-    double new_total_mass{};
-    for(body* body_ptr : body_children)
+    if(is_external())
     {
-        new_total_mass += body_ptr -> get_mass();
+        total_mass = node_body -> get_mass();
     }
+    else if(is_internal())
+    {
+        double new_total_mass{};
+        for(std::shared_ptr<b_h_node> child_node: children)
+        {
+            new_total_mass += child_node -> total_mass;
+        }
 
-    total_mass = new_total_mass;
+        total_mass = new_total_mass;
+    }
 }
 
 void b_h_tree::b_h_node::update_center_of_mass()
 {
-    sf::Vector2<double> new_center_of_mass{};
-
-    for(body* body_ptr : body_children)
+    if(is_external())
     {
-        new_center_of_mass += ((body_ptr -> get_position()) * body_ptr -> get_mass());
+        center_of_mass = node_body -> get_position();
+    }
+    else if(is_internal())
+    {
+        sf::Vector2<double> new_center_of_mass{};
+
+        for(std::shared_ptr<b_h_node> child_node: children)
+        {
+            new_center_of_mass += ((child_node -> center_of_mass) * child_node -> total_mass);
+        }
+
+        new_center_of_mass /= total_mass;
+
+        center_of_mass = new_center_of_mass;
     }
 
-    new_center_of_mass /= total_mass;
-
-    center_of_mass = new_center_of_mass;
-
 }
 
-void b_h_tree::b_h_node::add_body(body* new_body)
-{
-    body_children.push_back(new_body);
-    update_total_mass();
-    update_center_of_mass();
-
-}
 
 bool b_h_tree::b_h_node::in_quadrant(body* b)
 {
@@ -75,10 +82,10 @@ void b_h_tree::b_h_node::create_children()
     int half_width = width / 2;
     int half_height = height / 2;
 
-    b_h_node* q1 = new b_h_node(sf::Vector2(top_left.x + half_width, top_left.y), half_width, half_height);
-    b_h_node* q2 = new b_h_node(top_left, half_width, half_height);
-    b_h_node* q3 = new b_h_node(sf::Vector2(top_left.x, top_left.y + half_height), half_width, half_height);
-    b_h_node* q4 = new b_h_node(sf::Vector2(top_left.x + half_width, top_left.y + half_height), half_width, half_height);
+    std::shared_ptr<b_h_node> q1 = std::make_shared<b_h_node>(sf::Vector2(top_left.x + half_width, top_left.y), half_width, half_height);
+    std::shared_ptr<b_h_node> q2 = std::make_shared<b_h_node>(top_left, half_width, half_height);
+    std::shared_ptr<b_h_node> q3 = std::make_shared<b_h_node>(sf::Vector2(top_left.x, top_left.y + half_height), half_width, half_height);
+    std::shared_ptr<b_h_node> q4 = std::make_shared<b_h_node>(sf::Vector2(top_left.x + half_width, top_left.y + half_height), half_width, half_height);
 
     children.push_back(q1);
     children.push_back(q2);
@@ -91,7 +98,7 @@ void b_h_tree::b_h_node::create_children()
 
 b_h_tree::b_h_tree(std::vector<body*> bodies)
 {
-    root = new b_h_node{sf::Vector2<int>(0, 0), settings::DIMENSIONS.first, settings::DIMENSIONS.second};
+    root = std::make_shared<b_h_node>(sf::Vector2<int>(0, 0), settings::DIMENSIONS.first, settings::DIMENSIONS.second);
 
     for(body* b : bodies)
     {
@@ -100,7 +107,7 @@ b_h_tree::b_h_tree(std::vector<body*> bodies)
 }
 
 
-void b_h_tree::insert_node(b_h_node* root, body* new_body)
+void b_h_tree::insert_node(std::shared_ptr<b_h_node> root, body* new_body)
 {
     if(root -> is_empty())
     {
@@ -108,15 +115,17 @@ void b_h_tree::insert_node(b_h_node* root, body* new_body)
     }
     else if(root -> is_internal())
     {
-        root -> add_body(new_body);
 
-        for(b_h_node* quadrant : root -> children)
+        for(std::shared_ptr<b_h_node>  quadrant : root -> children)
         {
             if(quadrant -> in_quadrant(new_body))
             {
                 insert_node(quadrant, new_body);
+                break;
             }
         }
+        root -> update_total_mass();
+        root -> update_center_of_mass();
     }
     else if(root -> is_external())
     {
@@ -128,28 +137,32 @@ void b_h_tree::insert_node(b_h_node* root, body* new_body)
 
         root -> create_children();
 
-        for(b_h_node* quadrant : root -> children)
+        for(std::shared_ptr<b_h_node>  quadrant : root -> children)
         {
             if(quadrant -> in_quadrant(body_a))
             {
                 insert_node(quadrant, body_a);
+                break;
             }
         }
 
-        for(b_h_node* quadrant : root -> children)
+        for(std::shared_ptr<b_h_node>  quadrant : root -> children)
         {
             if(quadrant -> in_quadrant(body_b))
             {
                 insert_node(quadrant, body_b);
+                break;
             }
         }
 
-        root -> add_body(body_a);
-        root -> add_body(body_b);
+        root -> update_total_mass();
+        root -> update_center_of_mass();
     }
+
+    std::cout << "SIZE" << root -> children.size();
 }
 
-sf::Vector2<double> b_h_tree::calc_accel(b_h_node* root, body* b)
+sf::Vector2<double> b_h_tree::calc_accel(std::shared_ptr<b_h_node> root, body* b)
 {
     if(root -> is_external() && root -> node_body != b)
     {
@@ -177,7 +190,7 @@ sf::Vector2<double> b_h_tree::calc_accel(b_h_node* root, body* b)
         {
             sf::Vector2<double> net_accel{0, 0};
 
-            for(b_h_node* node : root -> children)
+            for(std::shared_ptr<b_h_node>  node : root -> children)
             {
                 net_accel += calc_accel(node, b);
             }

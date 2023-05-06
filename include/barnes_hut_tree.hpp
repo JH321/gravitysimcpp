@@ -6,6 +6,7 @@
 #include <settings.hpp>
 #include <SFML/Graphics.hpp>
 #include <body.hpp>
+#include <memory>
 
 class body;
 
@@ -17,9 +18,8 @@ class b_h_tree
         {
             body* node_body{};
 
-            std::vector<b_h_node*> children{};
+            std::vector<std::shared_ptr<b_h_node>> children{};
 
-            std::vector<body*> body_children{};
 
             sf::Vector2<int> top_left{};
 
@@ -64,7 +64,7 @@ class b_h_tree
             
         };
         
-        b_h_node* root;
+        std::shared_ptr<b_h_node> root;
 
     public:
 
@@ -72,10 +72,10 @@ class b_h_tree
         
 
 
-        void insert_node(b_h_node* root, body* new_body);
+        void insert_node(std::shared_ptr<b_h_node> root, body* new_body);
         
 
-        sf::Vector2<double> calc_accel(b_h_node* root, body* b);
+        sf::Vector2<double> calc_accel(std::shared_ptr<b_h_node> root, body* b);
          
     };
 

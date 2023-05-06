@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
 {
     simulation::n_body_sim sim{};
     
-    for(size_t i = 0; i < 50; ++i)
+    for(size_t i = 0; i < 500; ++i)
     {
         sim.add_body(rand() % 500 + 50, 
                     rand() % 10, 

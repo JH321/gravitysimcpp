@@ -20,6 +20,7 @@ namespace simulation
 
             n_body_sim();
             
+            ~n_body_sim();
 
             void init();
             

@@ -1,5 +1,5 @@
 #include <n_body_sim.hpp>
-
+#include <iostream>
 
 simulation::n_body_sim::n_body_sim() : bodies{}, window(sf::VideoMode(settings::DIMENSIONS.first, settings::DIMENSIONS.second), "N body sim")
 , Clock{}
@@ -7,6 +7,13 @@ simulation::n_body_sim::n_body_sim() : bodies{}, window(sf::VideoMode(settings::
     
 }
 
+simulation::n_body_sim::~n_body_sim()
+{
+    for(body* body_ptr : bodies)
+    {
+        delete body_ptr;
+    }
+}
 
 void simulation::n_body_sim::init()
 {
@@ -24,7 +31,7 @@ void simulation::n_body_sim::init()
 
 
         float Time = Clock.getElapsedTime().asSeconds();
-
+        Clock.restart();
         for(body* ptr : bodies)
         {
             ptr -> update_position(bodies, Time);
@@ -36,9 +43,11 @@ void simulation::n_body_sim::init()
             window.draw(body_shape);
 
         }
+
+        std::cout << Time << std::endl;
         window.display();
 
-        Clock.restart();
+        
     }
 }
 
