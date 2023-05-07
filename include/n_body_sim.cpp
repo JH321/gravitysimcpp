@@ -1,5 +1,7 @@
 #include <n_body_sim.hpp>
+#include <settings.hpp>
 #include <iostream>
+#include <barnes_hut_tree.hpp>
 
 simulation::n_body_sim::n_body_sim() : bodies{}, window(sf::VideoMode(settings::DIMENSIONS.first, settings::DIMENSIONS.second), "N body sim")
 , Clock{}
@@ -32,16 +34,34 @@ void simulation::n_body_sim::init()
 
         float Time = Clock.getElapsedTime().asSeconds();
         Clock.restart();
-        for(body* ptr : bodies)
+        if(!settings::b_h_sim)
         {
-            ptr -> update_position(bodies, Time);
+            for(body* ptr : bodies)
+            {
+                ptr -> update_position(bodies, Time);
 
-            sf::CircleShape body_shape(ptr -> get_radius());
+                sf::CircleShape body_shape(ptr -> get_radius());
 
-            body_shape.setPosition(ptr -> get_position().x - ptr -> get_radius(), ptr -> get_position().y - ptr -> get_radius());
-            body_shape.setFillColor(sf::Color::Magenta);
-            window.draw(body_shape);
+                body_shape.setPosition(ptr -> get_position().x - ptr -> get_radius(), ptr -> get_position().y - ptr -> get_radius());
+                body_shape.setFillColor(sf::Color::Magenta);
+                window.draw(body_shape);
 
+            }
+        }
+        else
+        {
+
+            b_h_tree body_tree{bodies};
+            for(body* ptr : bodies)
+            {
+                ptr -> update_position_barnes_hut(body_tree, Time);
+
+                sf::CircleShape body_shape(ptr -> get_radius());
+
+                body_shape.setPosition(ptr -> get_position().x - ptr -> get_radius(), ptr -> get_position().y - ptr -> get_radius());
+                body_shape.setFillColor(sf::Color::Magenta);
+                window.draw(body_shape);
+            }
         }
 
         std::cout << Time << std::endl;

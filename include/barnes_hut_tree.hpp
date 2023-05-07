@@ -70,12 +70,12 @@ class b_h_tree
 
         b_h_tree(std::vector<body*> bodies);
         
-
+        sf::Vector2<double> get_accel(body* b) const;
 
         void insert_node(std::shared_ptr<b_h_node> root, body* new_body);
         
 
-        sf::Vector2<double> calc_accel(std::shared_ptr<b_h_node> root, body* b);
+        sf::Vector2<double> calc_accel(std::shared_ptr<b_h_node> root, body* b) const;
          
     };
 

@@ -44,7 +44,8 @@
      
       
       void update_position(const std::vector<body*>& bodies, double dt);
-    
+
+      void update_position_barnes_hut(const b_h_tree& body_tree, double dt);
       
       sf::Vector2<double> calc_accel(const body* bodyptr);
       
@@ -61,10 +62,11 @@
      
       void update_velocity(const std::vector<body*>& bodies, double dt);
       
-
+      void update_velocity_barnes_hut(const b_h_tree& body_tree, double dt);
       
       void update_acceleration(const std::vector<body*>& bodies);
       
+      void update_acceleration_barnes_hut(const b_h_tree& body_tree);
 
       void update_acceleration_brute_force(const std::vector<body*>& bodies);
       

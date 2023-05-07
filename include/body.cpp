@@ -63,6 +63,16 @@ void body::update_position(const std::vector<body*>& bodies, double dt)
 
 }
 
+void body::update_position_barnes_hut(const b_h_tree& body_tree, double dt)
+{
+    if(!inplace)
+    {
+        increment_position(dt);
+        update_velocity_barnes_hut(body_tree, dt);
+    }
+
+}
+
 /**
  * @brief Calculates the acceleration induced on this body by another body.
  * 
@@ -137,6 +147,22 @@ void body::update_velocity(const std::vector<body*>& bodies, double dt)
 }
 
 /**
+ * @brief Function to call to initiate updating of velocity given 
+ *        a vector of other bodies exerting a force on this body and
+ *        a small time segment.
+ * 
+ * @param bodies Vector containing other bodies exerting a force on this body.
+ * @param dt Time segment (time since last frame update) in seconds.
+ */
+void body::update_velocity_barnes_hut(const b_h_tree& body_tree, double dt)
+{
+
+    update_acceleration_barnes_hut(body_tree);
+    increment_velocity(dt);
+
+}
+
+/**
  * @brief Function to call to initiate updating of acceleration given 
  *        a vector of other bodies exerting a force on this body and
  *        a small time segment.
@@ -145,19 +171,6 @@ void body::update_velocity(const std::vector<body*>& bodies, double dt)
  * @param dt Time segment (time since last frame update) in seconds.
  */
 void body::update_acceleration(const std::vector<body*>& bodies)
-{
-    if(!settings::b_h_sim)
-    {
-        update_acceleration_brute_force(bodies);
-    }
-    else
-    {
-        update_acceleration_b_h(bodies);
-    }
-    
-}
-
-void body::update_acceleration_brute_force(const std::vector<body*>& bodies)
 {
     sf::Vector2<double> new_acceleration{0, 0};
     for(const body* element : bodies)
@@ -172,14 +185,13 @@ void body::update_acceleration_brute_force(const std::vector<body*>& bodies)
     }
 
     acceleration = new_acceleration;
+    
 }
 
-
-void body::update_acceleration_b_h(const std::vector<body*>& bodies)
+void body::update_acceleration_barnes_hut(const b_h_tree& body_tree)
 {
-
-    sf::Vector2<double> new_acceleration{0, 0};
-    b_h_tree body_tree{bodies};
-
-    acceleration = new_acceleration;
+   
+    acceleration = body_tree.get_accel(this);
+    
 }
+

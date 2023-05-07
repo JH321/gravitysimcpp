@@ -106,6 +106,10 @@ b_h_tree::b_h_tree(std::vector<body*> bodies)
     }
 }
 
+sf::Vector2<double> b_h_tree::get_accel(body* b) const
+{
+    return calc_accel(root, b);
+}
 
 void b_h_tree::insert_node(std::shared_ptr<b_h_node> root, body* new_body)
 {
@@ -159,10 +163,9 @@ void b_h_tree::insert_node(std::shared_ptr<b_h_node> root, body* new_body)
         root -> update_center_of_mass();
     }
 
-    std::cout << "SIZE" << root -> children.size();
 }
 
-sf::Vector2<double> b_h_tree::calc_accel(std::shared_ptr<b_h_node> root, body* b)
+sf::Vector2<double> b_h_tree::calc_accel(std::shared_ptr<b_h_node> root, body* b) const
 {
     if(root -> is_external() && root -> node_body != b)
     {
