@@ -61,6 +61,30 @@ void body::update_position(const std::vector<body*>& bodies, double dt)
         update_velocity(bodies, dt);
     }
 
+    if(position.x < 0 || position.x > settings::DIMENSIONS.first)
+    {
+        if(position.x < 0)
+        {
+            position = sf::Vector2<double>{radius * 1.0, position.y};
+        }
+        if(position.x > settings::DIMENSIONS.first)
+        {
+            position = sf::Vector2<double>{settings::DIMENSIONS.first - radius * 1.0, position.y};
+        }
+
+    }
+    if(position.y < 0 || position.y > settings::DIMENSIONS.second)
+    {
+        if(position.y < 0)
+        {
+            position = sf::Vector2<double>{position.x, radius * 1.0};
+        }
+        if(position.y > settings::DIMENSIONS.second)
+        {
+            position = sf::Vector2<double>{position.x, settings::DIMENSIONS.second - radius * 1.0};
+        }
+    }
+
 }
 
 void body::update_position_barnes_hut(const b_h_tree& body_tree, double dt)
@@ -69,6 +93,30 @@ void body::update_position_barnes_hut(const b_h_tree& body_tree, double dt)
     {
         increment_position(dt);
         update_velocity_barnes_hut(body_tree, dt);
+    }
+
+    if(position.x < 0 || position.x > settings::DIMENSIONS.first)
+    {
+        if(position.x < 0)
+        {
+            position = sf::Vector2<double>{radius * 1.0, position.y};
+        }
+        if(position.x > settings::DIMENSIONS.first)
+        {
+            position = sf::Vector2<double>{settings::DIMENSIONS.first - radius * 1.0, position.y};
+        }
+
+    }
+    if(position.y < 0 || position.y > settings::DIMENSIONS.second)
+    {
+        if(position.y < 0)
+        {
+            position = sf::Vector2<double>{position.x, radius * 1.0};
+        }
+        if(position.y > settings::DIMENSIONS.second)
+        {
+            position = sf::Vector2<double>{position.x, settings::DIMENSIONS.second - radius * 1.0};
+        }
     }
 
 }
@@ -140,10 +188,18 @@ void body::increment_velocity(double dt)
  */
 void body::update_velocity(const std::vector<body*>& bodies, double dt)
 {
+    if(position.x < 0 || position.x > settings::DIMENSIONS.first)
+    {
+        velocity = sf::Vector2<double>{-velocity.x, velocity.y};
+    }
+    if(position.y < 0 || position.y > settings::DIMENSIONS.second)
+    {
+        velocity = sf::Vector2<double>{velocity.x, -velocity.y};
+    }
 
     update_acceleration(bodies);
     increment_velocity(dt);
-
+    
 }
 
 /**
@@ -157,6 +213,14 @@ void body::update_velocity(const std::vector<body*>& bodies, double dt)
 void body::update_velocity_barnes_hut(const b_h_tree& body_tree, double dt)
 {
 
+    if(position.x < 0 || position.x > settings::DIMENSIONS.first)
+    {
+        velocity = sf::Vector2<double>{-velocity.x, velocity.y};
+    }
+    if(position.y < 0 || position.y > settings::DIMENSIONS.second)
+    {
+        velocity = sf::Vector2<double>{velocity.x, -velocity.y};
+    }
     update_acceleration_barnes_hut(body_tree);
     increment_velocity(dt);
 

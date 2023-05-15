@@ -1,6 +1,7 @@
 #include <barnes_hut_tree.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
+
 //inner node struct definitions
 b_h_tree::b_h_node::b_h_node()
 {

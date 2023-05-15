@@ -5,13 +5,12 @@
 
 namespace settings
 {
-  constexpr std::pair<int, int> DIMENSIONS{600, 600};
+  extern std::pair<int, int> DIMENSIONS;
 
-  constexpr double G{500};
+  extern const double G;
 
-  constexpr double RATIO_EPSILON{0.3};
+  extern const double RATIO_EPSILON;
 
-  constexpr bool b_h_sim = true;
+  extern const bool b_h_sim;
 }
-
 

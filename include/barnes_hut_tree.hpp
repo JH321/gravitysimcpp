@@ -20,7 +20,6 @@ class b_h_tree
 
             std::vector<std::shared_ptr<b_h_node>> children{};
 
-
             sf::Vector2<int> top_left{};
 
             int width{};

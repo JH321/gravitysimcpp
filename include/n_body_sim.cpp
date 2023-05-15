@@ -31,6 +31,10 @@ void simulation::n_body_sim::init()
         }
         window.clear();
 
+        sf::Vector2u size = window.getSize();
+
+        settings::DIMENSIONS.first = size.x;
+        settings::DIMENSIONS.second = size.y;
 
         float Time = Clock.getElapsedTime().asSeconds();
         Clock.restart();
@@ -63,7 +67,9 @@ void simulation::n_body_sim::init()
                 window.draw(body_shape);
             }
         }
-
+        
+        std::cout << settings::DIMENSIONS.first << std::endl;
+        std::cout << settings::DIMENSIONS.second << std::endl;
         std::cout << Time << std::endl;
         window.display();
 
