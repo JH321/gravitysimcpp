@@ -7,9 +7,9 @@ namespace settings
 
   const double G{10};
 
-  const double RATIO_EPSILON{0.3};
+  const double RATIO_EPSILON{0.5};
 
-  const bool b_h_sim = false;
+  const bool b_h_sim = true;
 }
 
 

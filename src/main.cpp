@@ -19,6 +19,13 @@ int main(int argc, char const *argv[])
                     std::make_pair(rand() % 10 - 5, rand() % 10 - 5));
     }
     
-    sim.init();
+    if(settings::b_h_sim)
+    {
+        sim.init_barnes_hut();
+    }
+    else
+    {
+        sim.init();
+    }
     return 0;
 }

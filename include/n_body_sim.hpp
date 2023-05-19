@@ -24,6 +24,7 @@ namespace simulation
 
             void init();
             
+            void init_barnes_hut();
 
             void add_body(double _mass, int _radius, bool _inplace = false, std::pair<double, double> position = std::make_pair(0.0, 0.0), std::pair<double, double> velocity = std::make_pair(0.0, 0.0));
             
