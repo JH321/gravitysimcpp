@@ -10,10 +10,18 @@
 
 class body;
 
+/**
+ * @brief The B_H_Tree object represents the quadtree used in the Barnes Hut algorithm. It handles
+ *        construction of such a tree and calculating net acceleration on a body from such a tree.
+*/
 class b_h_tree
 {
     public:
 
+        /**
+         * @brief The b_h_node object represents a single node that will be used by the quadtree that the Barnes Hut 
+         *        algorithm relies upon.
+        */
         struct b_h_node
         {
             body* node_body{};
@@ -67,7 +75,7 @@ class b_h_tree
 
     public:
 
-        b_h_tree(std::vector<body*> bodies);
+        b_h_tree(const std::vector<body*>& bodies);
         
         sf::Vector2<double> get_accel(body* b) const;
 

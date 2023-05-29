@@ -7,6 +7,7 @@
 #include <body.hpp>
 #include <barnes_hut_tree.hpp>
 
+
 namespace simulation
 {
     class n_body_sim

@@ -2,33 +2,62 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-//inner node struct definitions
+//inner node struct definitions//
+
+/**
+ * @brief Construct a new b_h_node object.
+*/
 b_h_tree::b_h_node::b_h_node()
 {
 
 }
 
+/**
+ * @brief Construct a new b_h_node object.
+ * 
+ * @param _top_left The top left coordinate of the quadrant that this node will represent.
+ * @param _width The width of the quadrant that this node will represent.
+ * @param _height The height of the quadrant that this node will represent.
+*/
 b_h_tree::b_h_node::b_h_node(sf::Vector2<int> _top_left, int _width, int _height)
 : top_left{_top_left}, width{_width}, height{_height}
 {
 
 }
 
+/**
+ * @brief  Determines whether this node is an internal node. An internal node is one that represents the body objects of its children nodes.
+ * 
+ * @return bool True if this node is an internal node, false otherwise.
+*/
 bool b_h_tree::b_h_node::is_internal()
 {
     return node_body == nullptr && children.size() != 0;
 }
 
+/**
+ * @brief Determines whether this node is an external node. An external node represents a single body object. It is a leaf of the quadtree.
+ * 
+ * @return bool True if this node is an external node, false otherwise.
+*/
 bool b_h_tree::b_h_node::is_external()
 {
     return node_body != nullptr && children.size() == 0;
 }
 
+/**
+ * @brief Determines whether this node is an empty node. An empty node has no children and has no body object that it represents.
+ * 
+ * @return bool True if this node is an empty node, false otherwise.
+*/
 bool b_h_tree::b_h_node::is_empty()
 {
     return node_body == nullptr && children.size() == 0;
 }
 
+/**
+ * @brief Updates the total mass of this node, if this node is an inner node.
+*/
 void b_h_tree::b_h_node::update_total_mass()
 {
     if(is_external())
@@ -47,6 +76,9 @@ void b_h_tree::b_h_node::update_total_mass()
     }
 }
 
+/**
+ * @brief Updates the center of mass represented by this node, if this node is an inner node.
+*/
 void b_h_tree::b_h_node::update_center_of_mass()
 {
     if(is_external())
@@ -69,7 +101,12 @@ void b_h_tree::b_h_node::update_center_of_mass()
 
 }
 
-
+/**
+ * @brief Determines if a body object is inside the quadrant represented by this node.
+ * 
+ * @param b Will determine if the body object being pointed to is inside the quadrant represented by this node.
+ * @return bool True if the body object is inside the quadrant, false otherwise.
+*/
 bool b_h_tree::b_h_node::in_quadrant(body* b)
 {
     sf::Vector2<double> b_pos = b -> get_position();
@@ -78,6 +115,9 @@ bool b_h_tree::b_h_node::in_quadrant(body* b)
 
 }
 
+/**
+ * @brief Creates children for this node. Essentially changes this node to be an inner node in the quadtree.
+*/
 void b_h_tree::b_h_node::create_children()
 {
     int half_width = width / 2;
@@ -96,8 +136,12 @@ void b_h_tree::b_h_node::create_children()
 
 
 //tree definitions  
-
-b_h_tree::b_h_tree(std::vector<body*> bodies)
+/**
+ * @brief Constructs the quadtree.
+ * 
+ * @param bodies Vector containing pointers to bodies in the sim from which the tree will be constructed.
+*/
+b_h_tree::b_h_tree(const std::vector<body*>& bodies)
 {
     root = std::make_shared<b_h_node>(sf::Vector2<int>(0, 0), settings::DIMENSIONS.first, settings::DIMENSIONS.second);
 
@@ -107,11 +151,26 @@ b_h_tree::b_h_tree(std::vector<body*> bodies)
     }
 }
 
+/**
+ * @brief Gets the acceleration induced on the body being pointed to by b.
+ * 
+ * @param b The induced acceleration on the body pointed to by b from other bodies will be returned.
+ * @return sf::Vector2<double> Acceleration vector induced on b.
+*/
 sf::Vector2<double> b_h_tree::get_accel(body* b) const
 {
     return calc_accel(root, b);
 }
 
+/**
+ * @brief Recursively inserts a node representing a body in the system into the quadtree. This is the crux in
+ *        constructing the quadtree utilized in the Barnes Hut algorithm.
+ *        Check https://www.cs.princeton.edu/courses/archive/fall03/cs126/assignments/barnes-hut.html
+ *        for the algorithm.
+ * 
+ * @param root The node being examined in current recursive call.
+ * @param new_body Pointer to the body object that is being inserted into the quadtree.
+*/
 void b_h_tree::insert_node(std::shared_ptr<b_h_node> root, body* new_body)
 {
     if(root -> is_empty())
@@ -166,6 +225,18 @@ void b_h_tree::insert_node(std::shared_ptr<b_h_node> root, body* new_body)
 
 }
 
+/**
+ * @brief Recursively calculates the acceleration induced by the other bodies in the quadtree
+ *        on the inputted body.
+ *        Check https://www.cs.princeton.edu/courses/archive/fall03/cs126/assignments/barnes-hut.html
+ *        for the algorithm.
+ * 
+ * @param root The current node being examined in the recursive call.
+ * @param b The acceleration induced on the body pointed to by b will be calculated.
+ * @return sf::Vector2<double> The induced acceleration produced on the inputted body by the body represented by the current node being examined.
+*          If the a bunch of bodies are far enough, the node will represent a collection of these bodies and the center of mass
+*          formed by these bodies will be used to calculated the induced acceleration and this will be returned.
+*/
 sf::Vector2<double> b_h_tree::calc_accel(std::shared_ptr<b_h_node> root, body* b) const
 {
     if(root -> is_external() && root -> node_body != b)
