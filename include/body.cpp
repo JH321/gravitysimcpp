@@ -48,7 +48,7 @@ sf::Vector2<double> body::get_position()
 /**
  * @brief Function to call to initiate updating of position given 
  *        a vector of other bodies exerting a force on this body and
- *        a small time segment.
+ *        a small time segment. Uses naive method.
  * 
  * @param bodies Vector containing other bodies exerting a force on this body.
  * @param dt Time segment (time since last frame update) in seconds.
@@ -87,6 +87,13 @@ void body::update_position(const std::vector<body*>& bodies, double dt)
 
 }
 
+/**
+ * @brief Function to call to initiate updating of position using the 
+ *        Barnes Hut approximation method.
+ * 
+ * @param body_tree Barnes Hut quadtree containing the bodies in the sim.
+ * @param dt Time segment (time since last frame update) in seconds.
+ */
 void body::update_position_barnes_hut(const b_h_tree& body_tree, double dt)
 {
     if(!inplace)
@@ -181,7 +188,7 @@ void body::increment_velocity(double dt)
 /**
  * @brief Function to call to initiate updating of velocity given 
  *        a vector of other bodies exerting a force on this body and
- *        a small time segment.
+ *        a small time segment. Uses naive method.
  * 
  * @param bodies Vector containing other bodies exerting a force on this body.
  * @param dt Time segment (time since last frame update) in seconds.
@@ -203,11 +210,10 @@ void body::update_velocity(const std::vector<body*>& bodies, double dt)
 }
 
 /**
- * @brief Function to call to initiate updating of velocity given 
- *        a vector of other bodies exerting a force on this body and
- *        a small time segment.
+ * @brief Function to call to initiate updating of velocity using the 
+ *        Barnes Hut approximation method.
  * 
- * @param bodies Vector containing other bodies exerting a force on this body.
+ * @param body_tree Barnes Hut quadtree containing the bodies in the sim.
  * @param dt Time segment (time since last frame update) in seconds.
  */
 void body::update_velocity_barnes_hut(const b_h_tree& body_tree, double dt)
@@ -229,10 +235,9 @@ void body::update_velocity_barnes_hut(const b_h_tree& body_tree, double dt)
 /**
  * @brief Function to call to initiate updating of acceleration given 
  *        a vector of other bodies exerting a force on this body and
- *        a small time segment.
+ *        a small time segment. Uses naive method.
  * 
  * @param bodies Vector containing other bodies exerting a force on this body.
- * @param dt Time segment (time since last frame update) in seconds.
  */
 void body::update_acceleration(const std::vector<body*>& bodies)
 {
@@ -252,6 +257,12 @@ void body::update_acceleration(const std::vector<body*>& bodies)
     
 }
 
+/**
+ * @brief Function to call to initiate updating of acceleration using the 
+ *        Barnes Hut approximation method.
+ * 
+ * @param body_tree Barnes Hut quadtree containing the bodies in the sim.
+ */
 void body::update_acceleration_barnes_hut(const b_h_tree& body_tree)
 {
    
