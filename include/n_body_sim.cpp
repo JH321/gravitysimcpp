@@ -3,12 +3,18 @@
 #include <iostream>
 #include <barnes_hut_tree.hpp>
 
+/**
+ * @brief Constructs a n_body_sim object.
+*/
 simulation::n_body_sim::n_body_sim() : bodies{}, window(sf::VideoMode(settings::DIMENSIONS.first, settings::DIMENSIONS.second), "N body sim")
 , Clock{}
 {
     
 }
 
+/**
+ * @brief Destructor for the n_body_sim object, cleans up dynamically allocated memory.
+*/
 simulation::n_body_sim::~n_body_sim()
 {
     for(body* body_ptr : bodies)
@@ -17,6 +23,9 @@ simulation::n_body_sim::~n_body_sim()
     }
 }
 
+/**
+ * @brief Initializes a naive n body simulation.
+*/
 void simulation::n_body_sim::init()
 {
 
@@ -63,6 +72,9 @@ void simulation::n_body_sim::init()
     }
 }
 
+/**
+ * @brief Initializes a simulation using the Barnes Hut method of approximation.
+*/
 void simulation::n_body_sim::init_barnes_hut()
 {
 
@@ -113,6 +125,14 @@ void simulation::n_body_sim::init_barnes_hut()
     }
 }
 
+/**
+ * @brief Adds a body to the simulation. 
+ * @param _mass The mass of the body being added.
+ * @param _radius The radius of the body being added.
+ * @param _inplace Whether the body being added is in place.
+ * @param position The initial position of the body being added.
+ * @param velocity The initial velocity of the body being added.
+*/
 void simulation::n_body_sim::add_body(double _mass, int _radius, bool _inplace, std::pair<double, double> position, std::pair<double, double> velocity)
 {
     sf::Vector2<double> init_pos(position.first, position.second);
