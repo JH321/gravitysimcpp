@@ -35,6 +35,8 @@ namespace simulation
 
             void random_sim_init(size_t num_bodies, bool b_h_flag);
 
+            void circular_orbit(bool b_h_flag);
+
            
     };
 }

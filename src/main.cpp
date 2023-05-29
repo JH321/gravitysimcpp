@@ -9,7 +9,8 @@ int main(int argc, char const *argv[])
 {
     simulation::n_body_sim sim{};
     
-    sim.random_sim_init(500, false);
-    
+    //sim.random_sim_init(25, true);
+
+    sim.circular_orbit(true);
     return 0;
 }

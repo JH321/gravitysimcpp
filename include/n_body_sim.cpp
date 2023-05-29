@@ -2,6 +2,7 @@
 #include <settings.hpp>
 #include <iostream>
 #include <barnes_hut_tree.hpp>
+#include <cmath>
 
 /**
  * @brief Constructs a n_body_sim object.
@@ -24,7 +25,7 @@ simulation::n_body_sim::~n_body_sim()
 }
 
 /**
- * @brief Initializes a n body sim with an inputted number of bodies. The bodies have
+ * @brief Initializes a n body sim with an inputted number of bodies. The bodies have random mass, random radius, and
  *        random initial positions and initial velocities.
  * @param num_bodies The number of bodies in the n body sim.
  * @param b_h_flag True if a simulation using the Barnes Hut method is desired, false if a naive simulation is desired.
@@ -33,8 +34,8 @@ void simulation::n_body_sim::random_sim_init(size_t num_bodies, bool b_h_flag)
 {
     for(size_t i = 0; i < num_bodies; ++i)
     {
-        this -> add_body(rand() % 500 + 50, 
-                    rand() % 10, 
+        add_body(rand() % 500 + 50, 
+                    rand() % 9 + 1, 
                     false, 
                     std::make_pair(rand() % settings::DIMENSIONS.first, 
                     rand() % settings::DIMENSIONS.second), 
@@ -43,12 +44,28 @@ void simulation::n_body_sim::random_sim_init(size_t num_bodies, bool b_h_flag)
 
     if(b_h_flag)
     {
-        this -> init_barnes_hut();
+        init_barnes_hut();
     }
     else
     {
-        this -> init();
+        init();
     }
+}
+
+void simulation::n_body_sim::circular_orbit(bool b_h_flag)
+{
+    double m1 = 50;
+    double m2 = 100;
+
+    int r1 = static_cast<int>(m1) / 10;
+    int r2 = static_cast<int>(m2) / 10;
+
+    int pos_diff = rand() % 50 + 50;
+    
+    add_body(m1, r1, false, std::make_pair<double, double>(settings::DIMENSIONS.first / 2.0 + pos_diff, settings::DIMENSIONS.second / 2.0), std::make_pair<double, double>(0, -sqrt((m2 * settings::G) / pos_diff)));
+    add_body(m2, r2, true, std::make_pair<double, double>(settings::DIMENSIONS.first / 2.0, settings::DIMENSIONS.second / 2.0), std::make_pair<double, double>(0, 0));
+    
+    init();
 }
 
 /**
