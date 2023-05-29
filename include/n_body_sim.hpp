@@ -10,6 +10,10 @@
 
 namespace simulation
 {
+    /**
+     * @brief The n_body_sim class represents an n body simulation. It provides the functionality for initializing
+     *        an n body simulation in an encapsulated way.
+    */
     class n_body_sim
     {
         private:
