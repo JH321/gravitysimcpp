@@ -9,23 +9,7 @@ int main(int argc, char const *argv[])
 {
     simulation::n_body_sim sim{};
     
-    for(size_t i = 0; i < 500; ++i)
-    {
-        sim.add_body(rand() % 500 + 50, 
-                    rand() % 10, 
-                    false, 
-                    std::make_pair(rand() % settings::DIMENSIONS.first, 
-                    rand() % settings::DIMENSIONS.second), 
-                    std::make_pair(rand() % 10 - 5, rand() % 10 - 5));
-    }
+    sim.random_sim_init(500, false);
     
-    if(settings::b_h_sim)
-    {
-        sim.init_barnes_hut();
-    }
-    else
-    {
-        sim.init();
-    }
     return 0;
 }

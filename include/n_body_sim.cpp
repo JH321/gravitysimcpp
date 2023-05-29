@@ -24,6 +24,34 @@ simulation::n_body_sim::~n_body_sim()
 }
 
 /**
+ * @brief Initializes a n body sim with an inputted number of bodies. The bodies have
+ *        random initial positions and initial velocities.
+ * @param num_bodies The number of bodies in the n body sim.
+ * @param b_h_flag True if a simulation using the Barnes Hut method is desired, false if a naive simulation is desired.
+*/
+void simulation::n_body_sim::random_sim_init(size_t num_bodies, bool b_h_flag)
+{
+    for(size_t i = 0; i < num_bodies; ++i)
+    {
+        this -> add_body(rand() % 500 + 50, 
+                    rand() % 10, 
+                    false, 
+                    std::make_pair(rand() % settings::DIMENSIONS.first, 
+                    rand() % settings::DIMENSIONS.second), 
+                    std::make_pair(rand() % 10 - 5, rand() % 10 - 5));
+    }
+
+    if(b_h_flag)
+    {
+        this -> init_barnes_hut();
+    }
+    else
+    {
+        this -> init();
+    }
+}
+
+/**
  * @brief Initializes a naive n body simulation.
 */
 void simulation::n_body_sim::init()
