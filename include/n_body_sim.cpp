@@ -52,6 +52,10 @@ void simulation::n_body_sim::random_sim_init(size_t num_bodies, bool b_h_flag)
     }
 }
 
+/**
+ * @brief Initializes a n body sim with circular orbit.
+ * @param b_h_flag True if a simulation using the Barnes Hut method is desired, false if a naive simulation is desired.
+*/
 void simulation::n_body_sim::circular_orbit(bool b_h_flag)
 {
     double m1 = 50;
