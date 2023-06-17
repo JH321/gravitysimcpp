@@ -2,15 +2,15 @@
 
 #include <utility>
 
-
-namespace settings
+inline namespace settings
 {
-  extern std::pair<int, int> DIMENSIONS;
+  
+  inline std::pair<int, int> DIMENSIONS = {600, 600}; //The dimensions of the graphics window
 
-  extern const double G;
+  inline const double G = 10; //gravitation constant in Newton's universal law of gravitation formula
 
-  extern const double RATIO_EPSILON;
+  inline const double RATIO_EPSILON = 0.5; //ratio used in the Barnes Hut acceleration calculation
 
-  extern const bool b_h_sim;
 }
+
 

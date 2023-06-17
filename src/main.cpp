@@ -1,4 +1,3 @@
-#include <SFML/Graphics.hpp>
 #include <settings.hpp>
 #include <vector>
 #include <iostream>
