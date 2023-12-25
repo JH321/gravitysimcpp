@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     graphviz \
     doxygen \
     cmake
-ENTRYPOINT ["sh", "-c", "cd build && cmake .. && make && src/main"]
+RUN ["sh", "-c", "cd build && cmake .. && make"]
+ENTRYPOINT [ "sh", "-c", "cd build && src/main" ]
 
 
